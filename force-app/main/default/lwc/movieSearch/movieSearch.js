@@ -26,7 +26,7 @@ export default class MovieSearch extends LightningElement {
             this.selectedType = value;
         } else if (name === "search") {
             this.selectedSearch = value;
-        } else if (name === pageno) {
+        } else if (name === "pageno") {
             this.selectedPageno = value;
         }
         //debouncing used to avoid frequent API/Apex call ::on search of everyletter

@@ -1,4 +1,8 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, wire } from 'lwc';
+import { publish, MessageContext } from "lightning/messageService";
+import MOVIE_CHANNEL from "@salesforce/messageChannel/movieSearch__c";
+
+
 const DELAY = 300;
 
 export default class MovieSearch extends LightningElement {
@@ -9,6 +13,10 @@ export default class MovieSearch extends LightningElement {
     loading = false;
     searchResults = [];
     selectedMovie = "";
+
+    @wire(MessageContext)
+    messageContext;
+
 
     get typeoptions() {
         return [
@@ -26,7 +34,7 @@ export default class MovieSearch extends LightningElement {
             this.selectedType = value;
         } else if (name === "search") {
             this.selectedSearch = value;
-        } else if (name === pageno) {
+        } else if (name === "pageno") {
             this.selectedPageno = value;
         }
         //debouncing used to avoid frequent API/Apex call ::on search of everyletter
@@ -52,6 +60,10 @@ export default class MovieSearch extends LightningElement {
 
     movieSelectedHandler(event) {
         this.selectedMovie = event.detail;
+
+        const payload = { movieId: this.selectedMovie};
+
+        publish(this.messageContext, MOVIE_CHANNEL, payload);
         
     }
 
